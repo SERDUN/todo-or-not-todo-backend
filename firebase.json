@@ -14,5 +14,24 @@
         "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
-  ]
+  ],
+  "emulators": {
+    "auth": {
+      "port": 7980
+    },
+    "functions": {
+      "port": 7981
+    },
+    "firestore": {
+      "port": 7982
+    },
+    "hosting": {
+      "port": 7984
+    },
+    "ui": {
+      "enabled": false,
+      "port": 7985
+    },
+    "singleProjectMode": true
+  }
 }
