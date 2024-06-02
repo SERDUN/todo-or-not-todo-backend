@@ -1,83 +1,45 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { firestore } from 'firebase-admin';
-import { REQUEST } from '@nestjs/core';
 import { Todo } from './entities/todo.entity';
-import DocumentSnapshot = firestore.DocumentSnapshot;
-import QuerySnapshot = firestore.QuerySnapshot;
 
 @Injectable()
 export class TodoService {
-  private collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  private todos: Todo[] = [];
 
-  constructor(@Inject(REQUEST) private readonly request: { user: any }) {
-    this.collection = firestore().collection('todos');
-  }
-
-  async create(createTodoDto: CreateTodoDto) {
-    const userId = this.request.user.uid;
-    const todo: Omit<Todo, 'id'> = {
+  create(createTodoDto: CreateTodoDto): Promise<Todo> {
+    const newTodo: Todo = {
+      id: this.generateId(),
       ...createTodoDto,
+      userId: '123', // Example user ID
       createdAt: new Date().toISOString(),
-      userId,
     };
-
-    return this.collection.add(todo).then((doc) => {
-      return { id: doc.id, ...todo };
-    });
+    this.todos.push(newTodo);
+    return Promise.resolve(newTodo);
   }
 
-  findAll() {
-    return this.collection
-      .where('userId', '==', this.request.user.uid)
-      .get()
-      .then((querySnapshot: QuerySnapshot<Todo>) => {
-        if (querySnapshot.empty) {
-          return [];
-        }
-
-        const todos: Todo[] = [];
-        for (const doc of querySnapshot.docs) {
-          todos.push(this.transformTodo(doc));
-        }
-
-        return todos;
-      });
+  findAll(): Promise<Todo[]> {
+    return Promise.resolve(this.todos);
   }
 
-  findOne(id: string) {
-    return this.collection
-      .doc(id)
-      .get()
-      .then((querySnapshot: DocumentSnapshot<Todo>) => {
-        return this.transformTodo(querySnapshot);
-      });
+  findOne(id: string): Promise<Todo> {
+    const todo = this.todos.find((todo) => todo.id === id);
+    return Promise.resolve(todo);
   }
 
-  async update(id: string, updateTodoDto: UpdateTodoDto) {
-    await this.collection.doc(id).update({ ...updateTodoDto });
+  update(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
+    const index = this.todos.findIndex((todo) => todo.id === id);
+    if (index === -1) return Promise.resolve(null);
+    this.todos[index] = { ...this.todos[index], ...updateTodoDto };
+    return Promise.resolve(this.todos[index]);
   }
 
-  async remove(id: string) {
-    await this.collection.doc(id).delete();
+  remove(id: string): Promise<void> {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+    return Promise.resolve();
   }
 
-  private transformTodo(querySnapshot: DocumentSnapshot<Todo>) {
-    if (!querySnapshot.exists) {
-      throw new Error(`no todo found with the given id`);
-    }
-
-    const todo = querySnapshot.data();
-    const userId = this.request.user.uid;
-
-    if (todo.userId !== userId) {
-      throw new Error(`no todo found with the given id`);
-    }
-
-    return {
-      id: querySnapshot.id,
-      ...todo,
-    };
+  private generateId(): string {
+    return (Math.random() * 1000).toFixed(0);
   }
 }
