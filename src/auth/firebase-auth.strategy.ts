@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Strategy, ExtractJwt } from 'passport-firebase-jwt';
-import { auth } from 'firebase-admin';
+import { ExtractJwt, Strategy } from 'passport-firebase-jwt';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class FirebaseAuthStrategy extends PassportStrategy(Strategy) {
@@ -11,12 +11,13 @@ export class FirebaseAuthStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(token) {
-    return auth()
-      .verifyIdToken(token, true)
-      .catch((err) => {
-        console.warn(err);
-        throw new UnauthorizedException();
-      });
+  async validate(idToken: string) {
+    console.info('validate');
+    try {
+      return await admin.auth().verifyIdToken(idToken, true);
+    } catch (err) {
+      console.warn(err);
+      throw new UnauthorizedException();
+    }
   }
 }

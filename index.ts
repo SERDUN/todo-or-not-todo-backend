@@ -6,7 +6,8 @@ import { AppModule } from './src/app.module';
 import { CONFIG } from './config';
 import { Express } from 'express-serve-static-core';
 import * as admin from 'firebase-admin';
-import { ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const expressServer = express();
 
@@ -20,6 +21,19 @@ const createFunction = async (expressInstance: Express): Promise<void> => {
     AppModule,
     new ExpressAdapter(expressInstance),
   );
+
+  const options = new DocumentBuilder()
+    .setTitle('Todo or not todo')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addServer(
+      'https://us-central1-todo-or-not-todo-5b704.cloudfunctions.net/api/v1',
+    )
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('doc', app, document);
 
   app.setGlobalPrefix('v1');
   app.useGlobalPipes(new ValidationPipe());
