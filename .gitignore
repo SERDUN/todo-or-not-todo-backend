@@ -2,3 +2,9 @@ node_modules/
 dist/
 
 .runtimeconfig.json
+.env
+
+.idea
+
+firestore-debug.log
+firebase-debug.log
