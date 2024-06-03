@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt } from 'class-validator';
 
 export class CreateTodoDto {
   @ApiProperty({
@@ -17,4 +17,13 @@ export class CreateTodoDto {
   })
   @IsString()
   details: string;
+
+  @ApiProperty({
+    description: 'Position of the todo item',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  position?: number;
 }

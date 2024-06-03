@@ -30,4 +30,11 @@ export class Todo {
     example: '2024-06-02T14:48:00.000Z',
   })
   createdAt: string;
+
+  @ApiProperty({
+    description: 'Position of the todo item',
+    example: 1,
+    required: false,
+  })
+  position?: number;
 }

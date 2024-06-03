@@ -14,4 +14,10 @@ export class UpdateTodoDto extends PartialType(CreateTodoDto) {
     example: 'Remember to buy milk, bread, and eggs',
   })
   details?: string;
+
+  @ApiPropertyOptional({
+    description: 'Position of the todo item',
+    example: 1,
+  })
+  position?: number;
 }
