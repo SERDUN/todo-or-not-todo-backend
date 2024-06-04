@@ -1,6 +1,7 @@
 const ORIGINS = [
   'http://localhost',
   /http:\/\/localhost:\d+/,
+  'https://todo-or-not-todo-5b704.web.app',
   'https://todo-or-not-todo.web.app',
 ];
 
