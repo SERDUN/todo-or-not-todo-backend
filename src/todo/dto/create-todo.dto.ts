@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsInt } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt, IsEnum } from 'class-validator';
+import { TaskPriority, TaskStatus } from '../entities/todo.enums';
 
 export class CreateTodoDto {
   @ApiProperty({
@@ -16,7 +17,8 @@ export class CreateTodoDto {
     required: false,
   })
   @IsString()
-  details: string;
+  @IsOptional()
+  details?: string;
 
   @ApiProperty({
     description: 'Position of the todo item',
@@ -26,4 +28,20 @@ export class CreateTodoDto {
   @IsOptional()
   @IsInt()
   position?: number;
+
+  @ApiProperty({
+    description: 'Priority of the todo item',
+    example: 'major',
+  })
+  @IsNotEmpty()
+  @IsEnum(TaskPriority)
+  priority: TaskPriority;
+
+  @ApiProperty({
+    description: 'Status of the todo item',
+    example: 'open',
+  })
+  @IsNotEmpty()
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
 }

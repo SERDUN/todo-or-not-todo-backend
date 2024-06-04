@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TaskPriority, TaskStatus } from './todo.enums';
 
 export class Todo {
   @ApiProperty({
@@ -17,7 +18,7 @@ export class Todo {
     description: 'Details about the todo item',
     example: 'Remember to buy milk, bread, and eggs',
   })
-  details: string;
+  details?: string;
 
   @ApiProperty({
     description: 'User ID associated with the todo item',
@@ -37,4 +38,16 @@ export class Todo {
     required: false,
   })
   position?: number;
+
+  @ApiProperty({
+    description: 'Priority of the todo item',
+    example: 'major',
+  })
+  priority: TaskPriority = TaskPriority.minor;
+
+  @ApiProperty({
+    description: 'Status of the todo item',
+    example: 'open',
+  })
+  status: TaskStatus = TaskStatus.open;
 }
