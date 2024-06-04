@@ -33,4 +33,10 @@ export class UpdateTodoDto extends PartialType(CreateTodoDto) {
     example: 'open',
   })
   status?: TaskStatus;
+
+  @ApiPropertyOptional({
+    description: 'Array of sub-task IDs',
+    example: ['subtask1', 'subtask2'],
+  })
+  subTasks?: string[];
 }

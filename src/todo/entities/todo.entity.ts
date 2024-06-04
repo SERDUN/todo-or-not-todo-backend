@@ -50,4 +50,11 @@ export class Todo {
     example: 'open',
   })
   status: TaskStatus = TaskStatus.open;
+
+  @ApiProperty({
+    description: 'Array of sub-task IDs',
+    example: ['subtask1', 'subtask2'],
+    required: false,
+  })
+  subTasks?: string[];
 }

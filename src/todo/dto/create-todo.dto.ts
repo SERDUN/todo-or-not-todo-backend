@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsInt, IsEnum } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsInt,
+  IsArray, IsEnum,
+} from 'class-validator';
 import { TaskPriority, TaskStatus } from '../entities/todo.enums';
 
 export class CreateTodoDto {
@@ -44,4 +50,13 @@ export class CreateTodoDto {
   @IsNotEmpty()
   @IsEnum(TaskStatus)
   status: TaskStatus;
+
+  @ApiProperty({
+    description: 'Array of sub-task IDs',
+    example: ['subtask1', 'subtask2'],
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  subTasks?: string[];
 }

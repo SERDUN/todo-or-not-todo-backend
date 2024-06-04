@@ -35,6 +35,7 @@ export class TodoService {
       ...createTodoDto,
       createdAt: new Date().toISOString(),
       userId,
+      subTasks: createTodoDto.subTasks || [],
     };
 
     const docRef = await this.collection.add(todoData as any);
